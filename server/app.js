@@ -4,16 +4,19 @@
     var cookieParser = require('cookie-parser');
     var logger = require('morgan');
 }
-const http = require("http");
-const socketIo = require("socket.io");
 
+const http = require("http");
 const SOCKET_PORT = 5001;
+const io = require("socket.io")(SOCKET_PORT);
+
+
 
 {//Express created code
     var indexRouter = require('./routes/index');
     var usersRouter = require('./routes/users');
 }
-var socketRouter = require('./routes/socket');
+//TODO : Dont think i need the socket route
+//var socketRouter = require('./routes/socket');
 
 var app = express();
 
@@ -28,28 +31,44 @@ var app = express();
     app.use('/', indexRouter);
     app.use('/users', usersRouter);
 }
-app.use('/socket', socketRouter);
+//TODO : Dont think i need the socket route
+//app.use('/socket', socketRouter);
 
 {//Socket Code from https://www.valentinog.com/blog/socket-react/
+//Chat code from https://www.youtube.com/watch?v=rxzOqP9YwmM&t=548s
 //Dev Note, not sure if this is where the code should be. there is similar code in the bin/www fine (example 'var server = http.createServer(app)')
 //// Atm, you can make a get request to port 5000/socket and 5001/socket both get into the routes/socket.js file
-const server = http.createServer(app);
 
-const io = socketIo(server); 
-
-let interval;
+//let interval;
 
 io.on("connection", (socket) => {
   console.log("New client connected");
-  if (interval) {
-    clearInterval(interval);
-  }
-  interval = setInterval(() => getApiAndEmit(socket), 1000);
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-    clearInterval(interval);
-  });
+{ /* Start simple socket code here */
+//   if (interval) {
+//     clearInterval(interval);
+//   }
+
+//   interval = setInterval(() => getApiAndEmit(socket), 1000);
+
+//   socket.on("disconnect", () => {
+//     console.log("Client disconnected");
+//     clearInterval(interval);
+//   });
+
+//     socket.on('FromClient', ()=>{
+//         console.log('message received from client');
+//         socket.emit("FromAPI", 'someone clicked the button');
+//         clearInterval(interval);
+//     });
+ /* End simple socket code here */}
+
+    socket.on('button-click-from-client', data => {
+        console.log(data);
+        socket.broadcast.emit('button-click-from-server', data); //socket.broadcast.emit will send a message to all clients listening on the socket, except the client that sent the original message to the server
+    })
+
 });
+
 
 const getApiAndEmit = socket => {
   const response = new Date();
@@ -57,7 +76,6 @@ const getApiAndEmit = socket => {
   socket.emit("FromAPI", response);
 };
 
-server.listen(SOCKET_PORT, () => console.log(`Listening on port ${SOCKET_PORT}`));
-}
+/**Socket code end */}
 
 module.exports = app;
