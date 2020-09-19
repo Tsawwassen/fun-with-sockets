@@ -38,5 +38,6 @@ run 'npm run server' to start the Node Express server
 
 ## Credits
 - "Socket.IO, React and Node.js: Going Real-Time", Valentino Gagliardi (https://www.valentinog.com/blog/socket-react/)
+- "Build a Real Time Chat App With Node.js And Socket.io", Web Dev Simplified (https://www.youtube.com/watch?v=rxzOqP9YwmM&t=548s)
 
 #### Anything else that seems useful
