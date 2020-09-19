@@ -19,9 +19,7 @@ class ClientSocket extends Component {
     //// having the use this.state.socket.on (...) felt too much, and since moving it outside of the component does not break the chat app, i moved it outside
     //// I'm not sure if the socket.on(...) definitions should be place in the componentDidMount function, but I can keep it organized here to manage calling component functions from here
     componentDidMount(){
-        socket.on("chat-message", data => {
-            this.setState({response: data})
-        });
+       
         socket.on('button-click-from-server', data => {
             this.setState({response: this.state.response + "\n" + data})
         });
